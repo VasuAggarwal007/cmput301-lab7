@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -17,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
     ListView cityList;
     EditText newName;
     LinearLayout nameField;
+    LinearLayout mainView;
+    LinearLayout detailView;
+    TextView detailCityName;
     ArrayAdapter<String> cityAdapter;
     ArrayList<String> dataList;
 
@@ -26,9 +31,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         nameField = findViewById(R.id.field_nameEntry);
-        newName  = findViewById(R.id.editText_name);
+        newName = findViewById(R.id.editText_name);
 
         cityList = findViewById(R.id.city_list);
+        mainView = findViewById(R.id.main_view);
+        detailView = findViewById(R.id.detail_view);
+        detailCityName = findViewById(R.id.detail_city_name);
 
         //String []cities ={"Edmonton", "Vancouver", "Moscow", "Sydney", "Berlin", "Vienna", "Tokyo", "Beijing", "Osaka", "New Delhi"};
 
@@ -40,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         cityList.setAdapter(cityAdapter);
+
+        cityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedCity = dataList.get(i);
+                showCityDetail(selectedCity);
+            }
+        });
 
         final Button addButton = findViewById(R.id.button_add);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -64,5 +80,23 @@ public class MainActivity extends AppCompatActivity {
                 cityAdapter.clear();
             }
         });
+
+        final Button backButton = findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showMainView();
+            }
+        });
+    }
+
+    private void showCityDetail(String cityName){
+        detailCityName.setText(cityName);
+        mainView.setVisibility(View.GONE);
+        detailView.setVisibility(View.VISIBLE);
+    }
+
+    private void showMainView(){
+        mainView.setVisibility(View.VISIBLE);
+        detailView.setVisibility(View.GONE);
     }
 }
